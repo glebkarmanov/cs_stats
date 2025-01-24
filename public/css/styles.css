@@ -1,0 +1,391 @@
+/* Общие стили */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #000; /* Чисто черный фон */
+    color: #fff; /* Белый текст по умолчанию */
+}
+
+/* Верхняя панель (navbar) */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1a1a1a; /* Черная полоска */
+    color: #fff;
+    padding: 10px 20px;
+}
+
+.navbar .logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Основной контейнер */
+.container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* Профиль пользователя */
+.profile {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    background-color: #1a1a1a; /* Дефолтный фон, если нет cover_image */
+}
+
+/* Информация о пользователе */
+.profile .info {
+     display: flex;
+     flex-direction: row;
+     align-items: center;
+     flex: 1;
+     background-color: rgba(26, 26, 26, 0.8); /* Полупрозрачный фон для читаемости */
+     padding: 15px;
+     border-radius: 8px;
+     justify-content: space-between;
+}
+
+/* Аватарка пользователя */
+.profile .info .background {
+    width: 150px;
+    height: 150px;
+    background-color: #555; /* Серый фон по умолчанию */
+    border-radius: 8px;
+    overflow: hidden;
+    margin-right: 20px;
+    flex-shrink: 0;
+    border: 3px solid #fff; /* Добавлена белая рамка */
+}
+
+.profile .info .background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Информация о пользователе */
+.profile .info .details {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.profile .info .details .username {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.profile .info .details .registration-info {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.profile .info .details .registration-date {
+    font-size: 14px;
+    color: #aaa;
+    margin-bottom: 10px;
+}
+
+.profile .info .details .elo-level {
+    display: flex;
+    flex-direction: column; /* Располагаем вертикально */
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.profile .info .details .elo {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.profile .info .details .elo span {
+    font-weight: bold;
+}
+
+.profile .info .details .level {
+    display: flex;
+    align-items: center;
+}
+
+.profile .info .details .level span {
+    margin-right: 5px;
+    font-weight: bold;
+}
+
+.profile .info .details .level img {
+    width: 24px;
+    height: 24px;
+}
+
+.profile .info .steam-button {
+    padding: 10px 20px;
+    background-color: #8A2BE2; /* Мягко фиолетовый цвет */
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    width: fit-content;
+    transition: background-color 0.3s ease;
+    margin-left: 20px;
+}
+
+.profile .info .steam-button:hover {
+    background-color: #5e1bbf; /* Темнее при наведении */
+}
+
+/* Горизонтальное меню */
+.horizontal-menu {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #444;
+}
+
+.horizontal-menu .menu-link {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #fff;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.horizontal-menu .menu-link:hover {
+    color: #8A2BE2; /* Фиолетовый цвет текста при наведении */
+    background-color: rgba(138, 43, 226, 0.1); /* Лёгкая фиолетовая подсветка */
+}
+
+/* Разделитель */
+.separator {
+    height: 1px;
+    background-color: #444;
+    margin: 20px 0;
+}
+
+/* Статистика игры */
+.game-stats {
+    background-color: #2c2c2c;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.game-stats h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 20px;
+    border-bottom: 1px solid #555;
+    padding-bottom: 5px;
+}
+
+/* Новый контейнер для логотипа и статистики */
+.stats-container {
+    display: flex;
+    align-items: center;
+}
+
+/* Стилизация логотипа игры */
+.game-logo {
+    margin-right: 20px;
+}
+
+.game-logo img {
+    width: 250px; /* Подберите подходящий размер */
+    height: auto;
+    border-radius: 8px;
+}
+
+/* Стилизация статистики */
+.game-stats .stats {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.game-stats .stats .stat {
+    flex: 1 1 45%;
+    margin-bottom: 10px;
+}
+
+.game-stats .stats .stat span {
+    display: block;
+    font-weight: bold;
+}
+
+/* История матчей */
+.match-history {
+    /* Без прямоугольника */
+}
+
+.match-history h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.match-history .matches-list {
+    list-style: none;
+    padding: 0;
+}
+
+.match-history .matches-list li {
+    background-color: #1a1a1a;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.match-history .matches-list li:hover {
+    background-color: #333;
+}
+
+.match-history .matches-list li .match-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.match-history .matches-list li .match-info .date,
+.match-history .matches-list li .match-info .gameMode,
+.match-history .matches-list li .match-info .result,
+.match-history .matches-list li .match-info .score,
+.match-history .matches-list li .match-info .map {
+    margin-bottom: 0;
+    margin-right: 20px;
+    flex: 1;
+    text-align: center;
+}
+
+.match-history .matches-list li .match-info .map {
+    text-align: right;
+}
+
+/* Стилизация результатов */
+.match-history .matches-list li .result {
+    font-size: 14px;
+    color: #0f0; /* Зеленый для побед */
+}
+
+.match-history .matches-list li.lose .result {
+    color: #f00; /* Красный для поражений */
+}
+
+/* Остальные стили остаются без изменений */
+.match-history .show-more {
+    padding: 10px 20px;
+    background-color: #8A2BE2; /* Мягко фиолетовый цвет */
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.match-history .show-more:hover {
+    background-color: #5e1bbf; /* Темнее при наведении */
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .profile {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile .info {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .profile .info .background {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+
+    .profile .info .details {
+        align-items: center;
+    }
+
+    .profile .info .details .registration-info {
+        align-items: center;
+    }
+
+    .profile .info .details .elo-level {
+        align-items: center;
+    }
+
+    .game-stats .stats .stat {
+        flex: 1 1 100%;
+    }
+
+    .horizontal-menu {
+        flex-direction: column;
+    }
+
+    .horizontal-menu .menu-link {
+        width: 100%;
+        text-align: center;
+    }
+
+    .auth-container {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 40px;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .auth-container h1 {
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .auth-container form input[type="text"] {
+        padding: 10px;
+        width: 80%;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        font-size: 16px;
+    }
+
+    .auth-container form button {
+        padding: 10px 20px;
+        background-color: #007BFF;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
+
+    .auth-container form button:hover {
+        background-color: #0056b3;
+    }
+
+    .error {
+        color: red;
+        margin-top: 10px;
+    }
+}

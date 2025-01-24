@@ -1,25 +1,30 @@
 <?php
 
-namespace Src\Config\Db;
+namespace Src\Config;
 
 use PDO;
 use PDOException;
-class connectionDb
+use Dotenv\Dotenv;
+class db
 {
     private $conn;
 
-    public function getConnect()
+    public function getConnection()
     {
         if ($this->conn === null) {
             try {
-                $dsn = 'pgsql:host=localhost;port=5433;dbname=cs_stats';
-                $user = 'postgres';
-                $password = '1Nocokooo';
+                $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
+                $dotenv->load();
 
-                // Создаём экземпляр PDO
+                $host = $_ENV['DB_HOST'];
+                $port = $_ENV['DB_PORT'];
+                $dbname = $_ENV['DB_NAME'];
+                $user = $_ENV['DB_USER'];
+                $password = $_ENV['DB_PASS'];
+
+                $dsn = "pgsql:host={$host};port={$port};dbname={$dbname}";
                 $this->conn = new PDO($dsn, $user, $password);
                 $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-
                 $this->conn->exec("SET search_path TO public");
             } catch (PDOException $e) {
                 die("Ошибка подключения к базе данных: " . $e->getMessage());
@@ -28,3 +33,4 @@ class connectionDb
         return $this->conn;
     }
 }
+

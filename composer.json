@@ -2,7 +2,7 @@
     "name": "cs/cs",
     "autoload": {
         "psr-4": {
-            "Cs\\Cs\\": "src/"
+            "Src\\": "src/"
         }
     },
     "require": {
@@ -12,7 +12,10 @@
         "monolog/monolog": "^3.8",
         "league/plates": "^3.6",
         "nesbot/carbon": "^3.8",
-        "bramus/router": "^1.6"
+        "bramus/router": "^1.6",
+        "ext-pdo": "*",
+        "league/oauth2-client": "^2.8",
+        "ext-curl": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.5"
