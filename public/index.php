@@ -5,7 +5,7 @@ namespace Public\Index;
 require __DIR__ . '/../vendor/autoload.php';
 
 use Bramus\Router\Router;
-use Src\Config\db;
+use Src\Config\Database;
 use Src\Controllers\HomePageController;
 use Src\Controllers\AuthController;
 use Src\Views\View;
@@ -33,7 +33,7 @@ session_set_cookie_params([
 ]);
 
 // Создание подключения к базе данных
-$db = new db();
+$db = new Database();
 $pdo = $db->getConnection();
 
 // Создание необходимых сервисов

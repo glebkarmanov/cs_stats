@@ -5,11 +5,12 @@ namespace Src\Config;
 use PDO;
 use PDOException;
 use Dotenv\Dotenv;
-class db
-{
-    private $conn;
 
-    public function getConnection()
+class Database
+{
+    private ?PDO $conn = null;
+
+    public function getConnection(): PDO
     {
         if ($this->conn === null) {
             try {
@@ -33,4 +34,3 @@ class db
         return $this->conn;
     }
 }
-

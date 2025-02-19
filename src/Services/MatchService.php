@@ -3,8 +3,8 @@
 namespace Src\Services;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Exception;
-use Dotenv\Dotenv;
 
 class MatchService
 {
@@ -13,7 +13,7 @@ class MatchService
 
     public function __construct()
     {
-        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
+        $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
         $dotenv->load();
 
         $this->apiKey = $_ENV['FACEIT_API_KEY'];
@@ -28,36 +28,28 @@ class MatchService
     /**
      * Получает информацию о последних десяти матчах игрока
      *
-     * @param string $faceit_id Идентификатор игрока FACEIT
-     * @return array Массив матчей с необходимыми данными
-     * @throws Exception При ошибках запроса или обработки данных
+     * @param string $faceit_id
+     * @return array
+     * @throws Exception
      */
     public function getLastTenMatches(string $faceit_id): array
     {
         $matches = $this->fetchPlayerMatchHistory($faceit_id);
 
-            for ($i = 0; $i < count($matches); $i++) {
-                $checkResult = [];
-
-                $checkResult[] = $this->determineMatchResult($matches[$i]['teams']['faction1']['players'], $faceit_id);
-
-                if ($matches[$i]['results']['score']['faction1'] == $checkResult[0]['faction1']) {
-                    unset($matches[$i]['teams']);
-                    $matches[$i]['teams'] = 'Победа';
-                } else {
-                    unset($matches[$i]['teams']);
-                    $matches[$i]['teams'] = 'Поражение';
-                }
+        foreach ($matches as &$match) {
+            $result = $this->determineMatchResult($match['teams'], $faceit_id, $match['match_id']);
+            $match['teams'] = $result === 1 ? 'Победа' : 'Поражение';
+            $match['started_at'] = $formattedDate = date("d.m.Y H:i", $match['started_at']);
 
 
             // Получение Map и Score
             try {
-                $scoreAndMap = $this->fetchMatchScoreAndMap($matches[$i]['match_id']);
-                $matches[$i]['Map'] = $scoreAndMap['Map'] ?? 'Неизвестно';
-                $matches[$i]['Score'] = $scoreAndMap['Score'] ?? 'Неизвестно';
+                $scoreAndMap = $this->fetchMatchScoreAndMap($match['match_id']);
+                $match['Map'] = $scoreAndMap['Map'] ?? 'Неизвестно';
+                $match['Score'] = $scoreAndMap['Score'] ?? 'Неизвестно';
             } catch (Exception $e) {
-                $matches[$i]['Map'] = 'Ошибка';
-                $matches[$i]['Score'] = 'Ошибка';
+                $match['Map'] = 'Ошибка';
+                $match['Score'] = 'Ошибка';
             }
         }
 
@@ -86,7 +78,7 @@ class MatchService
         try {
             $response = $this->httpClient->get($url, ['query' => $query]);
             $data = json_decode($response->getBody(), true);
-        } catch (Exception $e) {
+        } catch (GuzzleException $e) {
             throw new Exception("Ошибка при получении истории матчей: " . $e->getMessage());
         }
 
@@ -112,25 +104,33 @@ class MatchService
      *
      * @param array $teams
      * @param string $faceit_id
+     * @return int 1 - Победа, 0 - Поражение
      */
-    private function determineMatchResult(array $data, string $faceit_id)
+    private function determineMatchResult(array $teams, string $faceit_id, $match_id): int
     {
+        $url = "https://open.faceit.com/data/v4/matches/{$match_id}/stats";
+
+        try {
+            $response = $this->httpClient->get($url);
+            $data = json_decode($response->getBody(), true);
+        } catch (GuzzleException $e) {
+            throw new Exception("Ошибка при получении данных матча: " . $e->getMessage());
+        }
+
+        $winner = $data['rounds'][0]['round_stats']['Winner'];
+
         $result = [];
 
-        for ($i = 0; $i < count($data); $i++) {
-            foreach ($data[$i] as $key => $value) {
-                if ($key == 'player_id') {
-                    if ($value === $faceit_id) {
-                        $result['faction1'] = 1;
-                        return $result;
-                    } else {
-                        $result['faction1'] = 0;
+        foreach ($teams as $faction) {
+            foreach ($faction['players'] as $player) {
+                if ($player['player_id'] === $faceit_id) {
+                    if ($faction['team_id'] == $winner) {
+                        return 1;
                     }
                 }
             }
-
         }
-        return $result;
+        return 0;
     }
 
     /**
@@ -147,7 +147,7 @@ class MatchService
         try {
             $response = $this->httpClient->get($url);
             $data = json_decode($response->getBody(), true);
-        } catch (Exception $e) {
+        } catch (GuzzleException $e) {
             throw new Exception("Ошибка при получении данных матча: " . $e->getMessage());
         }
 

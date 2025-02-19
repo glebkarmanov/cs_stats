@@ -3,16 +3,17 @@
 namespace Src\Models;
 
 use PDO;
+
 class StatisticsModel
 {
-    private $pdo;
+    private PDO $pdo;
 
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
     }
 
-    public function allStatistics()
+    public function allStatistics(): array
     {
         $sqlAllStatistics = "SELECT * FROM public.game_statistics";
         $stmt = $this->pdo->query($sqlAllStatistics);
@@ -43,21 +44,27 @@ class StatisticsModel
         return $allStatisticsResult;
     }
 
-    public function statisticsLastMatch()
+    public function statisticsLastMatch(): array
     {
-        $sqlLastMatch = "SELECT * FROM public.game_statistics order by match_id desc limit 1";
+        $sqlLastMatch = "SELECT * FROM public.game_statistics ORDER BY match_id DESC LIMIT 1";
         $stmt = $this->pdo->query($sqlLastMatch);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $lastMatchStatiscticsResult = [];
+        if (!$result) {
+            return [
+                'kills' => 0,
+                'deaths' => 0,
+                'KD' => 0
+            ];
+        }
 
-        $lastMatchStatiscticsResult['kills'] = $result['kills'];
-        $lastMatchStatiscticsResult['deaths'] = $result['deaths'];
+        $lastMatchStatisticsResult = [
+            'kills' => $result['kills'],
+            'deaths' => $result['deaths'],
+            'KD' => $result['kills'] / ($result['deaths'] ?: 1) // Предотвращение деления на ноль
+        ];
+        $lastMatchStatisticsResult['KD'] = round($lastMatchStatisticsResult['KD'], 2);
 
-        $lastMatchStatiscticsResult['KD'] = $lastMatchStatiscticsResult['kills'] / $lastMatchStatiscticsResult['deaths'];
-        $lastMatchStatiscticsResult['KD'] = round($lastMatchStatiscticsResult['KD'], 2);
-
-
-        return $lastMatchStatiscticsResult;
+        return $lastMatchStatisticsResult;
     }
 }

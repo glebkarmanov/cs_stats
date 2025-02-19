@@ -3,8 +3,8 @@
 namespace Src\Services;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Exception;
-use Dotenv\Dotenv;
 
 class UserService
 {
@@ -13,7 +13,7 @@ class UserService
 
     public function __construct()
     {
-        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
+        $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
         $dotenv->load();
 
         $this->apiKey = $_ENV['FACEIT_API_KEY'];
@@ -40,8 +40,6 @@ class UserService
         $nickname = $_SESSION['faceit_nickname'];
         $data = $this->fetchPlayerData($nickname);
 
-        unset($data['games']['csgo']);
-
         $filteredData = $this->filterUserData($data);
 
         return $filteredData;
@@ -63,7 +61,7 @@ class UserService
                 'query' => ['nickname' => $nickname]
             ]);
             $data = json_decode($response->getBody(), true);
-        } catch (Exception $e) {
+        } catch (GuzzleException $e) {
             throw new Exception("Ошибка при получении данных пользователя: " . $e->getMessage());
         }
 
@@ -85,28 +83,12 @@ class UserService
         $needKeys = ['nickname', 'avatar', 'cover_image', 'skill_level', 'faceit_elo', 'faceit_url', 'activated_at'];
         $result = [];
 
-        $this->recursiveFilter($data, $needKeys, $result);
-
-        return $result;
-    }
-
-    /**
-     * Рекурсивно проходит по массиву и собирает значения нужных ключей.
-     *
-     * @param array $data Исходный массив данных.
-     * @param array $needKeys Ключи, которые необходимо найти.
-     * @param array &$result Ссылка на массив, куда будут собираться результаты.
-     */
-    private function recursiveFilter(array $data, array $needKeys, array &$result): void
-    {
-        foreach ($data as $key => $value) {
-            if (in_array($key, $needKeys, true)) {
-                $result[$key] = $value;
-            }
-
-            if (is_array($value)) {
-                $this->recursiveFilter($value, $needKeys, $result);
+        foreach ($needKeys as $key) {
+            if (isset($data[$key])) {
+                $result[$key] = $data[$key];
             }
         }
+
+        return $result;
     }
 }
